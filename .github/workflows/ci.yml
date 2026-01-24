@@ -21,6 +21,8 @@ on:
 jobs:
   test:
     name: Test / OS ${{ matrix.os }} / Node ${{ matrix.node }}
+    permissions:
+      contents: read
     strategy:
       matrix:
         os: [ubuntu-latest]
