@@ -31,6 +31,9 @@ on:
 jobs:
   nowsecure:
     name: NowSecure
+    permissions:
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
