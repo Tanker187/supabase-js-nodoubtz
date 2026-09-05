@@ -78,8 +78,10 @@ export default class SupabaseClient<
   get storage(): SupabaseStorageClient {
     return new SupabaseStorageClient(this.storageUrl.href, this.headers, this.fetch)
   }
+  from<TableName extends string & keyof Schema['Tables'], Table extends Schema['Tables'][TableName]>(relation: TableName): PostgrestQueryBuilder<Schema, Table, TableName>
+  from<ViewName extends string & keyof Schema['Views'], View extends Schema['Views'][ViewName]>(relation: ViewName): PostgrestQueryBuilder<Schema, View, ViewName>
   from(relation: string): PostgrestQueryBuilder<Schema, any, any> { return this.rest.from(relation) }
-  schema<DynamicSchema extends string & keyof Database>(schema: DynamicSchema): PostgrestClient<Database, DynamicSchema, Database[DynamicSchema] extends GenericSchema ? GenericSchema : any> { return this.rest.schema<DynamicSchema>(schema) }
+  schema<DynamicSchema extends string & keyof Database>(schema: DynamicSchema): PostgrestClient<Database, DynamicSchema, Database[DynamicSchema] extends GenericSchema ? Database[DynamicSchema] : any> { return this.rest.schema<DynamicSchema>() }
   rpc<FnName extends string & keyof Schema['Functions'], Fn extends Schema['Functions'][FnName]>(fn: FnName, args: Fn['Args'] = {}, options: { head?: boolean; get?: boolean; count?: 'exact' | 'planned' | 'estimated' } = {}): PostgrestFilterBuilder<Schema, Fn['Returns'] extends any[] ? Fn['Returns'][number] extends Record<string, unknown> ? Fn['Returns'][number] : never : never, Fn['Returns'], FnName, null> { return this.rest.rpc(fn, args, options) }
   channel(name: string, opts: RealtimeChannelOptions = { config: {} }): RealtimeChannel { return this.realtime.channel(name, opts) }
   getChannels(): RealtimeChannel[] { return this.realtime.getChannels() }
@@ -98,9 +100,7 @@ export default class SupabaseClient<
   private _initRealtimeClient(options: RealtimeClientOptions) {
     return new RealtimeClient(this.realtimeUrl.href, { ...options, params: { ...{ apikey: this.supabaseKey }, ...options?.params } })
   }
-  private _listenForAuthEvents() {
-    return this.auth.onAuthStateChange((event, session) => this._handleTokenChanged(event, 'CLIENT', session?.access_token))
-  }
+  private _listenForAuthEvents() { return this.auth.onAuthStateChange((event, session) => this._handleTokenChanged(event, 'CLIENT', session?.access_token)) }
   private _handleTokenChanged(event: AuthChangeEvent, source: 'CLIENT' | 'STORAGE', token?: string) {
     if ((event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') && this.changedAccessToken !== token) this.changedAccessToken = token
     else if (event === 'SIGNED_OUT') {
