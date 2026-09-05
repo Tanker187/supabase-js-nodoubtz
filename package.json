@@ -7,8 +7,8 @@
     "typescript",
     "supabase"
   ],
-  "homepage": "https://github.com/supabase/supabase-js",
-  "bugs": "https://github.com/supabase/supabase-js/issues",
+  "homepage": "https://github.com/Tanker187/supabase-js-nodoubtz",
+  "bugs": "https://github.com/Tanker187/supabase-js-nodoubtz/issues",
   "license": "MIT",
   "author": "Supabase",
   "files": [
@@ -19,7 +19,7 @@
   "module": "dist/module/index.js",
   "types": "dist/module/index.d.ts",
   "sideEffects": false,
-  "repository": "supabase/supabase-js",
+  "repository": "Tanker187/supabase-js-nodoubtz",
   "scripts": {
     "clean": "rimraf dist docs/v2",
     "format": "prettier --write \"{src,test}/**/*.ts\"",
